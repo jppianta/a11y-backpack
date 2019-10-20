@@ -1,0 +1,38 @@
+{
+  "name": "a11y-backpack",
+  "version": "0.0.1",
+  "description": "A toolkit to help you create a more accessible website",
+  "main": "lib/a11yBackpack.js",
+  "scripts": {
+    "test": "jest",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jppianta/a11y-backpack.git"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "toolkit"
+  ],
+  "author": "João Pedro Pianta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jppianta/a11y-backpack/issues"
+  },
+  "homepage": "https://github.com/jppianta/a11y-backpack#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "typescript": "^3.6.4"
+  }
+}
