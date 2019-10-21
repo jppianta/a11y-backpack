@@ -1,4 +1,4 @@
-name: A11y Backpack Release
+name: A11y Backpack Merge
 
 on:
   pull_request:
