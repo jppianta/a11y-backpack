@@ -8,6 +8,7 @@ export class KeyboardHandler {
 
   dispose() {
     document.removeEventListener('keydown', this.onKeyPressed);
+    this.keyToCommandsMap.clear();
   }
 
   setKeyCommand(key: string, callback: () => void) {

@@ -14,6 +14,18 @@ describe('keyboardHandler', () => {
     keyboardHandler.dispose();
   });
 
+  describe('dispose', () => {
+    test('clear map entries on dispose', () => {
+      keyboardHandler.setKeyCommand('a', () => true);
+
+      expect(keyboardHandler.keyToCommandsMap.has('a')).toBe(true);
+
+      keyboardHandler.dispose();
+
+      expect(keyboardHandler.keyToCommandsMap.has('a')).toBe(false);
+    });
+  });
+
   describe('setKeyCommand', () => {
 
     test('command is added to the commands map', () => {
