@@ -1,4 +1,6 @@
-<img src="assets/A11yBackpack.png" />
+<div style="width: 100%; display: flex; align-items: center;">
+  <img src="assets/A11yBackpack.png" style="height: 300px;"/>
+</div>
 
 [![Coverage Status](https://coveralls.io/repos/github/jppianta/a11y-backpack/badge.svg?branch=master)](https://coveralls.io/github/jppianta/a11y-backpack?branch=master)
 
