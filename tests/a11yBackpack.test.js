@@ -34,13 +34,20 @@ describe('a11yBackpack', () => {
 
     beforeEach(() => {
       window.speechSynthesis = speechSynthesisMock;
+      window.SpeechSynthesisUtterance = function SpeechSynthesisUtterance() {};
     });
 
     afterEach(() => {
       window.speechSynthesis = undefined;
+      window.SpeechSynthesisUtterance = undefined;
     });
 
     test('set command and read inner text of element from id', () => {
+      a11yBackpack.setReadOnElementCommand({
+        id: 'test',
+        commandKey: 'a'
+      });
+
       const element = document.createElement('div');
       element.id = 'test';
       element.innerText = 'Hello, world!';
