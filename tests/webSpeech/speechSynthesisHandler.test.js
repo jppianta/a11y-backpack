@@ -29,7 +29,7 @@ describe('webSpeech', () => {
       test('throw an error is speechSynthesis is not defined by the browser', () => {
         window.speechSynthesis = undefined;
 
-        expect(() => speechSynthesisHandler.init()).toThrow('Speech Synthesis is not supported by your browser');
+        expect(() => speechSynthesisHandler.init()).toThrow('Speech Synthesis is not supported by the browser');
       });
     });
 
