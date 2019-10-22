@@ -42,6 +42,13 @@ class A11yBackpack {
     }
   }
 
+  setStartListeningKey(key: string) {
+    this.setSpeechRecognitionHandler();
+    this.setKeyboardHandler();
+
+    this.keyboardHandler!.setImportantKeyCommand(key, this.speechRecognitionHandler!.startListening);
+  }
+
   /**
    * Dispose keyboard handler and variables
    *

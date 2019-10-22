@@ -66,6 +66,19 @@ describe('a11yBackpack', () => {
     });
   });
 
+  describe('setStartListeningKey', () => {
+    test('should call startListening on key press', () => {
+      a11yBackpack.setStartListeningKey('l');
+  
+      const spy = jest.spyOn(a11yBackpack.speechRecognitionHandler, 'startListening');
+  
+      const event = new KeyboardEvent('keydown', { key: 'l' });
+      document.dispatchEvent(event);
+  
+      setTimeout(() => expect(spy).toHaveBeenCalled(), 1);
+    });
+  });
+
   describe('setReadOnElementCommand', () => {
     test('set key command and read inner text of element from id', () => {
       a11yBackpack.setReadOnElementCommand({

@@ -20,7 +20,7 @@ export class SpeechRecognitionHandler {
     this.onError = callback;
   }
 
-  startListening() {
+  startListening = () => {
     this.checkWebSpeech();
     this.speechRecognition!.start();
   }
