@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/A11yBackpack.png" style="height: 300px;"/>
+  <img src="assets/A11yBackpack.png" height=300px/>
 </p>
 
 [![Coverage Status](https://coveralls.io/repos/github/jppianta/a11y-backpack/badge.svg?branch=master)](https://coveralls.io/github/jppianta/a11y-backpack?branch=master)
