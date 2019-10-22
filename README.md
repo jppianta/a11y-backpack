@@ -18,6 +18,6 @@ A11y Backpack is a service designed to improve accessibility on your website. Ea
 
 `a11yBackpack.setStartListeningKey('l')`: Starts recognizing voice commands when the `l` key is pressed.
 
-`a11yBackpack.setReadOnElementCommand({ id: 'main-text', commandKey: 'c', voiceWord: 'content' })`: Reads the content of element with id `main-text` when the key `c` is pressed or when the usar says `content`.
+`a11yBackpack.setReadOnElementCommand({ id: 'main-text', commandKey: 'c', voiceWord: 'content' })`: Reads the content of element with id `main-text` when the key `c` is pressed or when the user says `content`.
 
-`a11yBackpack.setClickOnElementCommand({ id: 'menu-home-link', commandKey: 'h', voiceWord: 'home' })`: Clicks the element with id `menu-home-link` when the key `h` is pressed or when the usar says `home`.
+`a11yBackpack.setClickOnElementCommand({ id: 'menu-home-link', commandKey: 'h', voiceWord: 'home' })`: Clicks the element with id `menu-home-link` when the key `h` is pressed or when the user says `home`.
