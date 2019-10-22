@@ -1,5 +1,6 @@
 import { KeyboardHandler } from './keyboardHandler';
 import { SpeechSynthesisHandler } from './webSpeech/speechSynthesisHandler';
+import { SpeechRecognitionHandler } from './webSpeech/speechRecognitionHandler';
 
 /**
  * Main class to add accessibility commands to website
@@ -9,6 +10,7 @@ import { SpeechSynthesisHandler } from './webSpeech/speechSynthesisHandler';
 class A11yBackpack {
   private keyboardHandler?: KeyboardHandler;
   private speechSynthesisHandler?: SpeechSynthesisHandler;
+  private speechRecognitionHandler?: SpeechRecognitionHandler;
 
   /**
    * Set command that clicks on element when key is pressed
@@ -16,8 +18,13 @@ class A11yBackpack {
    * @param {{ id: string, commandKey: string }} info
    * @memberof A11yBackpack
    */
-  setClickOnElementCommand(info: { id: string, commandKey: string }) {
-    this.setKeyboardCommand(info.commandKey, this.getClickOnElementCallback(info.id));
+  setClickOnElementCommand(info: { id: string, commandKey?: string, voiceWord?: string }) {
+    if (info.commandKey) {
+      this.setKeyboardCommand(info.commandKey, this.getClickOnElementCallback(info.id));
+    }
+    if (info.voiceWord) {
+      this.setVoiceCommand(info.voiceWord, this.getClickOnElementCallback(info.id));
+    }
   }
 
   /**
@@ -26,8 +33,13 @@ class A11yBackpack {
    * @param {{ id: string, commandKey: string }} info
    * @memberof A11yBackpack
    */
-  setReadOnElementCommand(info: { id: string, commandKey: string }) {
-    this.setKeyboardCommand(info.commandKey, this.getReadOnElementCallback(info.id));
+  setReadOnElementCommand(info: { id: string, commandKey?: string, voiceWord?: string }) {
+    if (info.commandKey) {
+      this.setKeyboardCommand(info.commandKey, this.getReadOnElementCallback(info.id));
+    }
+    if (info.voiceWord) {
+      this.setVoiceCommand(info.voiceWord, this.getReadOnElementCallback(info.id));
+    }
   }
 
   /**
@@ -39,6 +51,11 @@ class A11yBackpack {
     if (this.keyboardHandler) {
       this.keyboardHandler.dispose();
       this.keyboardHandler = undefined;
+    }
+
+    if (this.speechRecognitionHandler) {
+      this.speechRecognitionHandler.dispose();
+      this.speechRecognitionHandler = undefined;
     }
 
     this.speechSynthesisHandler = undefined;
@@ -75,6 +92,12 @@ class A11yBackpack {
 
     this.keyboardHandler!.setKeyCommand(key, callback);
   }
+
+  private setVoiceCommand(word: string, callback: () => void) {
+    this.setSpeechRecognitionHandler();
+
+    this.speechRecognitionHandler!.setWordCommand(word, callback);
+  }
   
   private setKeyboardHandler() {
     if (!this.keyboardHandler) {
@@ -90,6 +113,18 @@ class A11yBackpack {
         this.speechSynthesisHandler.init();
       } catch (err) {
         this.speechSynthesisHandler = undefined;
+        throw err;
+      }
+    }
+  }
+
+  private setSpeechRecognitionHandler() {
+    if (!this.speechRecognitionHandler) {
+      this.speechRecognitionHandler = new SpeechRecognitionHandler();
+      try {
+        this.speechRecognitionHandler.init();
+      } catch (err) {
+        this.speechRecognitionHandler = undefined;
         throw err;
       }
     }

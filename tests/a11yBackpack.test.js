@@ -1,12 +1,30 @@
 import { a11yBackpack } from "../src/a11yBackpack";
 
 describe('a11yBackpack', () => {
+  const speechRecognitionMock = function speechRecognitionMock() { speechRecognitionMock.prototype.start = function () { } };
+  const speechGrammarListMock = function speechGrammarListMock() { speechGrammarListMock.prototype.addFromString = function () { } };
+  const speechSynthesisUtteranceMock = function SpeechSynthesisUtterance() { };
+  const speechSynthesisMock = {
+    speak: () => true
+  }
+
+  beforeEach(() => {
+    window.SpeechRecognition = speechRecognitionMock;
+    window.SpeechGrammarList = speechGrammarListMock;
+    window.speechSynthesis = speechSynthesisMock;
+    window.SpeechSynthesisUtterance = speechSynthesisUtteranceMock;
+  });
+
   afterEach(() => {
+    window.SpeechRecognition = undefined;
+    window.SpeechGrammarList = undefined;
+    window.speechSynthesis = undefined;
+    window.SpeechSynthesisUtterance = undefined;
     a11yBackpack.dispose();
   });
 
   describe('setClickOnElementCommand', () => {
-    test('create command that calls getClickOnElementCallback callback', () => {
+    test('create key command that calls getClickOnElementCallback callback', () => {
       a11yBackpack.setClickOnElementCommand({
         id: 'test',
         commandKey: 'a'
@@ -25,24 +43,31 @@ describe('a11yBackpack', () => {
 
       setTimeout(() => expect(testCounter).toEqual(1), 1);
     });
+
+    test('create voice command that calls getClickOnElementCallback callback', () => {
+      a11yBackpack.setClickOnElementCommand({
+        id: 'test',
+        voiceWord: 'test'
+      });
+
+      let testCounter = 0;
+
+      const element = document.createElement('button');
+      element.id = 'test';
+      element.onclick = () => testCounter = 1;
+
+      document.firstElementChild.appendChild(element);
+
+      a11yBackpack.speechRecognitionHandler.setOnErrorCallback(() => console.log('err'));
+
+      a11yBackpack.speechRecognitionHandler.speechRecognition.onresult({ results: [[{ confidence: 1, transcript: 'test' }]] });
+
+      setTimeout(() => expect(testCounter).toEqual(1), 1);
+    });
   });
 
   describe('setReadOnElementCommand', () => {
-    const speechSynthesisMock = {
-      speak: () => true
-    }
-
-    beforeEach(() => {
-      window.speechSynthesis = speechSynthesisMock;
-      window.SpeechSynthesisUtterance = function SpeechSynthesisUtterance() {};
-    });
-
-    afterEach(() => {
-      window.speechSynthesis = undefined;
-      window.SpeechSynthesisUtterance = undefined;
-    });
-
-    test('set command and read inner text of element from id', () => {
+    test('set key command and read inner text of element from id', () => {
       a11yBackpack.setReadOnElementCommand({
         id: 'test',
         commandKey: 'a'
@@ -61,23 +86,28 @@ describe('a11yBackpack', () => {
 
       setTimeout(() => expect(spy).toHaveBeenCalled(), 1);
     });
+
+    test('set voice command and read inner text of element from id', () => {
+      a11yBackpack.setReadOnElementCommand({
+        id: 'test',
+        voiceWord: 'test'
+      });
+
+      const element = document.createElement('div');
+      element.id = 'test';
+      element.innerText = 'Hello, world!';
+
+      document.firstElementChild.appendChild(element);
+
+      const spy = jest.spyOn(speechSynthesisMock, 'speak');
+
+      a11yBackpack.speechRecognitionHandler.speechRecognition.onresult({ results: [[{ confidence: 1, transcript: 'test' }]] });
+
+      expect(spy).toHaveBeenCalled();
+    });
   });
 
   describe('getReadOnElementCallback', () => {
-    const speechSynthesisMock = {
-      speak: () => true
-    }
-
-    beforeEach(() => {
-      window.speechSynthesis = speechSynthesisMock;
-      window.SpeechSynthesisUtterance = function SpeechSynthesisUtterance() {};
-    });
-
-    afterEach(() => {
-      window.speechSynthesis = undefined;
-      window.SpeechSynthesisUtterance = undefined;
-    });
-
     test('throw an error if element with id does not exist', () => {
       const callback = a11yBackpack.getReadOnElementCallback('idThatDoesNotExist');
 
@@ -139,18 +169,6 @@ describe('a11yBackpack', () => {
   });
 
   describe('setSpeechSynthesisHandler', () => {
-    const speechSynthesisMock = {
-      speak: () => true
-    }
-
-    beforeEach(() => {
-      window.speechSynthesis = speechSynthesisMock;
-    });
-
-    afterEach(() => {
-      window.speechSynthesis = undefined;
-    });
-
     test('create and init speechSynthesisHandler if undefined', () => {
       expect(a11yBackpack.speechSynthesisHandler).not.toBeDefined();
 
@@ -174,8 +192,53 @@ describe('a11yBackpack', () => {
     test('throw an error and keep undefined if speechSynthesisHandler fails to init', () => {
       window.speechSynthesis = undefined;
 
-      expect(() => a11yBackpack.setSpeechSynthesisHandler()).toThrow('Speech Synthesis is not supported by your browser');
-      expect(a11yBackpack.speechSynthesisHandler).not.toBeDefined();      
+      expect(() => a11yBackpack.setSpeechSynthesisHandler()).toThrow('Speech Synthesis is not supported by the browser');
+      expect(a11yBackpack.speechSynthesisHandler).not.toBeDefined();
+    });
+  });
+
+
+  describe('setSpeechRecognitionHandler', () => {
+    test('create and init speechRecognitionHandler if undefined', () => {
+      expect(a11yBackpack.speechRecognitionHandler).not.toBeDefined();
+
+      a11yBackpack.setSpeechRecognitionHandler();
+
+      expect(a11yBackpack.speechRecognitionHandler).toBeDefined();
+    });
+
+    test('keep instance if speechRecognitionHandler already exists', () => {
+      a11yBackpack.setSpeechRecognitionHandler();
+
+      const oldInstance = a11yBackpack.speechRecognitionHandler;
+
+      a11yBackpack.setSpeechRecognitionHandler();
+
+      const newInstance = a11yBackpack.speechRecognitionHandler;
+
+      expect(oldInstance).toEqual(newInstance);
+    });
+
+    test('throw an error and keep undefined if speechRecognitionHandler fails to init', () => {
+      window.SpeechRecognition = undefined;
+      window.SpeechGrammarList = undefined;
+
+      expect(() => a11yBackpack.setSpeechRecognitionHandler()).toThrow('Speech Recognition is not supported by the browser');
+      expect(a11yBackpack.speechRecognitionHandler).not.toBeDefined();
+    });
+  });
+
+  describe('setVoiceCommand', () => {
+    test('create speechRecognitionHandler if undefined and set new command', () => {
+      expect(a11yBackpack.keyboardHandler).not.toBeDefined();
+
+      let testCounter = 0;
+
+      a11yBackpack.setVoiceCommand('test', () => testCounter = 1);
+
+      a11yBackpack.speechRecognitionHandler.speechRecognition.onresult({ results: [[{ confidence: 1, transcript: 'test' }]] });
+
+      setTimeout(() => expect(testCounter).toEqual(1), 1);
     });
   });
 

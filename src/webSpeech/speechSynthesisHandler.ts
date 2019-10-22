@@ -10,7 +10,7 @@ export class SpeechSynthesisHandler {
     if (window.speechSynthesis) {
       this.speechSynthesis = window.speechSynthesis;
     } else {
-      throw new Error('Speech Synthesis is not supported by your browser');
+      throw new Error('Speech Synthesis is not supported by the browser');
     }
   }
 
