@@ -1,6 +1,6 @@
 {
   "name": "a11y-backpack",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A toolkit to help you create a more accessible website",
   "main": "lib/a11yBackpack.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "toolkit"
   ],
   "author": "João Pedro Pianta",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jppianta/a11y-backpack/issues"
   },
