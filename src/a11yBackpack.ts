@@ -50,6 +50,18 @@ class A11yBackpack {
   }
 
   /**
+   * Set callback for when word is not recognized
+   *
+   * @param {(recognizedWord: string) => void} callback
+   * @memberof A11yBackpack
+   */
+  setOnVoiceErrorCallback(callback: (recognizedWord: string) => void) {
+    this.setSpeechRecognitionHandler();
+
+    this.speechRecognitionHandler!.setOnErrorCallback(callback);
+  }
+
+  /**
    * Dispose keyboard handler and variables
    *
    * @memberof A11yBackpack

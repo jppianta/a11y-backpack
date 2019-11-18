@@ -3,7 +3,7 @@ export class SpeechRecognitionHandler {
   private speechRecognition?: SpeechRecognition;
   private speechGrammarList?: SpeechGrammarList;
   private grammar = '';
-  private onError?: () => void;
+  private onError?: (recognizedWord: string) => void;
 
   init() {
     this.initGrammarList();
@@ -16,7 +16,7 @@ export class SpeechRecognitionHandler {
     this.updateGrammar();
   }
 
-  setOnErrorCallback(callback: () => void) {
+  setOnErrorCallback(callback: (recognizedWord: string) => void) {
     this.onError = callback;
   }
 
@@ -37,10 +37,10 @@ export class SpeechRecognitionHandler {
       if (this.wordsToCommandsMap.has(resultWord)) {
         this.wordsToCommandsMap.get(resultWord)!();
       } else {
-        this.onError && this.onError();
+        this.onError && this.onError(resultWord);
       }
     } else {
-      this.onError && this.onError();
+      this.onError && this.onError('');
     }
   }
 
