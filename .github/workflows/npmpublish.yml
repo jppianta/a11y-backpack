@@ -22,6 +22,7 @@ jobs:
 
 
   publish-npm:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
